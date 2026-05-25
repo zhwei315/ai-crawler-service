@@ -155,13 +155,26 @@ export class DeepSeekAnalyzer {
       });
     });
 
-    const topSources: SourceInfo[] = Object.entries(allSources)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5)
-      .map(([name, count]) => ({
-        name,
-        url: '',
-        snippet: `被引用 ${count} 次`,
+    // 提取来源并保留URL信息
+    const sourceDetails: Record<string, { name: string; count: number; urls: string[] }> = {};
+    questions.forEach(q => {
+      const sources = this.extractSourcesFromAnswer(q.answer);
+      sources.forEach(s => {
+        if (!sourceDetails[s.name]) {
+          sourceDetails[s.name] = { name: s.name, count: 0, urls: [] };
+        }
+        sourceDetails[s.name].count += 1;
+        if (s.url) sourceDetails[s.name].urls.push(s.url);
+      });
+    });
+
+    const topSources: SourceInfo[] = Object.values(sourceDetails)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10)
+      .map(s => ({
+        name: s.name,
+        url: s.urls[0] || '',
+        snippet: `被引用 ${s.count} 次`,
       }));
 
     return {
@@ -224,21 +237,43 @@ export class DeepSeekAnalyzer {
     };
   }
 
-  private extractSourcesFromAnswer(answer: string): string[] {
-    const sources: string[] = [];
-    const patterns = [
-      { name: '知乎', pattern: /知乎/ },
-      { name: '百度知道', pattern: /百度知道/ },
-      { name: '小红书', pattern: /小红书/ },
-      { name: '今日头条', pattern: /今日头条/ },
-      { name: '抖音', pattern: /抖音/ },
-      { name: '微博', pattern: /微博/ },
-      { name: 'B站', pattern: /B站|bilibili/ },
+  private extractSourcesFromAnswer(answer: string): { name: string; url: string }[] {
+    const sources: { name: string; url: string }[] = [];
+
+    // 匹配URL链接
+    const urlPattern = /(https?:\/\/[^\s\)\]\>]+)/g;
+    const urls = answer.match(urlPattern) || [];
+
+    // 根据URL或文本内容识别来源平台
+    const platformPatterns = [
+      { name: '知乎', patterns: [/zhihu\.com/, /知乎/] },
+      { name: '百度知道', patterns: [/zhidao\.baidu\.com/, /百度知道/] },
+      { name: '小红书', patterns: [/xiaohongshu\.com/, /小红书/] },
+      { name: '今日头条', patterns: [/toutiao\.com/, /今日头条/] },
+      { name: '抖音', patterns: [/douyin\.com/, /抖音/] },
+      { name: '微博', patterns: [/weibo\.com/, /微博/] },
+      { name: 'B站', patterns: [/bilibili\.com/, /B站/] },
+      { name: '百度贴吧', patterns: [/tieba\.baidu\.com/, /贴吧/] },
+      { name: 'CSDN', patterns: [/csdn\.net/, /CSDN/] },
+      { name: '简书', patterns: [/jianshu\.com/, /简书/] },
     ];
 
-    for (const { name, pattern } of patterns) {
-      if (pattern.test(answer)) {
-        sources.push(name);
+    // 提取带URL的来源
+    urls.forEach(url => {
+      for (const { name, patterns } of platformPatterns) {
+        if (patterns.some(p => p.test(url))) {
+          sources.push({ name, url });
+          break;
+        }
+      }
+    });
+
+    // 如果没有URL，根据文本内容识别
+    if (sources.length === 0) {
+      for (const { name, patterns } of platformPatterns) {
+        if (patterns.some(p => p.test(answer))) {
+          sources.push({ name, url: '' });
+        }
       }
     }
 
