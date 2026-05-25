@@ -1,0 +1,1 @@
+{"version":3,"file":"deepseek.d.ts","sourceRoot":"","sources":["../src/deepseek.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,eAAe,EAAE,gBAAgB,EAA8B,MAAM,SAAS,CAAC;AAKxF,qBAAa,gBAAgB;IACrB,OAAO,CAAC,OAAO,EAAE,eAAe,GAAG,OAAO,CAAC,gBAAgB,CAAC;IAkDlE,OAAO,CAAC,mBAAmB;IAsC3B,OAAO,CAAC,mBAAmB;IAkF3B,OAAO,CAAC,iBAAiB;IAkDzB,OAAO,CAAC,wBAAwB;CAoBjC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"scheduler.d.ts","sourceRoot":"","sources":["../src/scheduler.ts"],"names":[],"mappings":"AAUA,qBAAa,SAAS;IACpB,OAAO,CAAC,aAAa,CAAgB;IACrC,OAAO,CAAC,kBAAkB,CAAqB;;IAQ/C,OAAO,CAAC,sBAAsB;IAoB9B,KAAK;YAgBS,cAAc;IAyB5B,OAAO,CAAC,cAAc;YAkBR,gBAAgB;YAwBhB,uBAAuB;YAuBvB,wBAAwB;YA4CxB,qBAAqB;YAsCrB,qBAAqB;IAM7B,kBAAkB;CAIzB"}
