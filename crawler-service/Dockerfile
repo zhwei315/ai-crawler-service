@@ -1,6 +1,6 @@
 FROM node:18-slim
 
-# 安装 Playwright 依赖
+# 安装 Playwright 依赖（完整版）
 RUN apt-get update && apt-get install -y \
     libnss3 \
     libatk-bridge2.0-0 \
@@ -8,6 +8,33 @@ RUN apt-get update && apt-get install -y \
     libxkbcommon0 \
     libgbm1 \
     libasound2 \
+    libxcomposite1 \
+    libxrandr2 \
+    libxdamage1 \
+    libxfixes3 \
+    libxrender1 \
+    libxtst6 \
+    libxi6 \
+    libpangocairo-1.0-0 \
+    libpango-1.0-0 \
+    libcairo2 \
+    libatspi2.0-0 \
+    libgtk-3-0 \
+    libgdk-pixbuf2.0-0 \
+    libglib2.0-0 \
+    libfontconfig1 \
+    libfreetype6 \
+    libexpat1 \
+    libuuid1 \
+    libx11-6 \
+    libx11-xcb1 \
+    libxcb1 \
+    libxext6 \
+    libxss1 \
+    ca-certificates \
+    fonts-liberation \
+    fonts-noto-color-emoji \
+    fonts-noto-cjk \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
