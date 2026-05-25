@@ -201,17 +201,25 @@ app.post('/scheduler/trigger', async (req, res) => {
 // 启动服务
 async function start() {
   try {
-    // 初始化浏览器
-    await crawler.init();
-    console.log('[Browser] Initialized');
-
-    // 启动定时任务
-    scheduler.start();
-
+     // 先启动 HTTP 服务，确保健康检查可用
     app.listen(port, () => {
       console.log(`[Server] Running on port ${port}`);
-      console.log(`[Scheduler] Weekly health check scheduled for Monday 02:00 CST`);
     });
+
+    // 延迟初始化浏览器（避免启动时阻塞）
+    setTimeout(async () => {
+      try {
+        await crawler.init();
+        console.log('[Browser] Initialized');
+
+        // 启动定时任务
+        scheduler.start();
+        console.log('[Scheduler] Weekly health check scheduled for Monday 02:00 CST');
+      } catch (error) {
+        console.error('[Browser Init Error]', error);
+      }
+    }, 1000);
+
 
     // 优雅关闭
     process.on('SIGTERM', async () => {
