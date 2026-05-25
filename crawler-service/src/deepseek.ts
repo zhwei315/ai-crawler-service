@@ -146,15 +146,6 @@ export class DeepSeekAnalyzer {
       };
     });
 
-    // 提取来源
-    const allSources: Record<string, number> = {};
-    questions.forEach(q => {
-      const sources = this.extractSourcesFromAnswer(q.answer);
-      sources.forEach(s => {
-        allSources[s] = (allSources[s] || 0) + 1;
-      });
-    });
-
     // 提取来源并保留URL信息
     const sourceDetails: Record<string, { name: string; count: number; urls: string[] }> = {};
     questions.forEach(q => {
