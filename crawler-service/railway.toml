@@ -1,0 +1,46 @@
+[build]
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+startCommand = "npm start"
+healthcheckPath = "/health"
+healthcheckTimeout = 300
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+
+[[deploy.envs]]
+name = "NODE_ENV"
+value = "production"
+
+[[deploy.envs]]
+name = "PORT"
+value = "3000"
+
+[[deploy.envs]]
+name = "DEEPSEEK_API_KEY"
+value = "sk-c0ad0366305044b9896450756aefd84a"
+
+[[deploy.envs]]
+name = "DEEPSEEK_API_URL"
+value = "https://api.deepseek.com/v1/chat/completions"
+
+[[deploy.envs]]
+name = "REQUEST_DELAY_MIN"
+value = "3000"
+
+[[deploy.envs]]
+name = "REQUEST_DELAY_MAX"
+value = "8000"
+
+[[deploy.envs]]
+name = "BROWSER_TIMEOUT"
+value = "120000"
+
+[[deploy.envs]]
+name = "MAX_CONCURRENT_BROWSERS"
+value = "1"
+
+[[deploy.envs]]
+name = "NOTIFICATION_ENABLED"
+value = "false"

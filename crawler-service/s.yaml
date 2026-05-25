@@ -1,0 +1,79 @@
+edition: 3.0.0
+name: ai-platform-crawler
+access: default
+
+vars:
+  region: cn-hangzhou
+  service:
+    name: ai-crawler-service
+    description: AI平台爬虫服务
+    logConfig: auto
+    
+resources:
+  crawler_function:
+    component: fc3
+    props:
+      region: ${vars.region}
+      functionName: crawler
+      runtime: custom.debian10
+      cpu: 2
+      memorySize: 4096
+      diskSize: 512
+      timeout: 600
+      environmentVariables:
+        DEEPSEEK_API_KEY: sk-c0ad0366305044b9896450756aefd84a
+        DEEPSEEK_API_URL: https://api.deepseek.com/v1/chat/completions
+        NOTIFICATION_ENABLED: "false"
+        NOTIFICATION_TYPE: webhook
+        NOTIFICATION_WEBHOOK_URL: ""
+        REQUEST_DELAY_MIN: "3000"
+        REQUEST_DELAY_MAX: "8000"
+        PLAYWRIGHT_BROWSERS_PATH: /tmp/playwright-browsers
+      layers:
+        - acs:fc:${vars.region}:official:layers/Nodejs18/versions/1
+      code: ./
+      customRuntimeConfig:
+        command:
+          - /opt/nodejs18/bin/node
+          - dist/aliyun-http.js
+      triggers:
+        - triggerName: http
+          triggerType: http
+          triggerConfig:
+            methods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            authType: anonymous
+
+  scheduler_function:
+    component: fc3
+    props:
+      region: ${vars.region}
+      functionName: scheduler
+      runtime: custom.debian10
+      cpu: 1
+      memorySize: 2048
+      diskSize: 512
+      timeout: 300
+      environmentVariables:
+        DEEPSEEK_API_KEY: sk-c0ad0366305044b9896450756aefd84a
+        DEEPSEEK_API_URL: https://api.deepseek.com/v1/chat/completions
+        NOTIFICATION_ENABLED: "false"
+        NOTIFICATION_TYPE: webhook
+        NOTIFICATION_WEBHOOK_URL: ""
+        PLAYWRIGHT_BROWSERS_PATH: /tmp/playwright-browsers
+      layers:
+        - acs:fc:${vars.region}:official:layers/Nodejs18/versions/1
+      code: ./
+      customRuntimeConfig:
+        command:
+          - /opt/nodejs18/bin/node
+          - dist/aliyun-http.js-scheduler
+      triggers:
+        - triggerName: timer
+          triggerType: timer
+          triggerConfig:
+            cronExpression: '0 0 2 * * 1'
+            enable: true

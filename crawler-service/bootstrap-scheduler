@@ -1,0 +1,8 @@
+#!/bin/bash
+# 阿里云函数计算启动脚本 - 定时任务
+
+export PATH=/opt/nodejs18/bin:$PATH
+export NODE_PATH=/opt/nodejs18/lib/node_modules
+
+cd /code
+exec /opt/nodejs18/bin/node dist/scheduler-trigger.js
