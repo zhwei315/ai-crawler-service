@@ -6,10 +6,10 @@ export const PLATFORM_CONFIGS: Record<string, PlatformConfig> = {
     name: 'DeepSeek',
     url: 'https://chat.deepseek.com',
     selector: {
-      input: 'textarea[placeholder*="发送消息"]',
-      submit: 'button[type="submit"]',
-      answer: '.ds-markdown',
-      loading: '.ds-loading',
+      input: 'textarea',
+      submit: 'button[type="submit"], button:has(svg), button:contains("发送")',
+      answer: '.ds-markdown, .markdown-body, [class*="message"], [class*="content"]',
+      loading: '.ds-loading, [class*="loading"], [class*="spinner"]',
     },
   },
   doubao: {
